@@ -12,7 +12,7 @@ var authJwtController = require('./auth_jwt');
 var jwt = require('jsonwebtoken');
 var cors = require('cors');
 var User = require('./Users');
-
+db = require('./db')(); //hack
 var app = express();
 app.use(cors());
 app.use(bodyParser.json());
