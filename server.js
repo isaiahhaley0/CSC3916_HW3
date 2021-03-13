@@ -1,3 +1,4 @@
+
 /*
 CSC3916 HW2
 File: Server.js
@@ -12,7 +13,7 @@ var authJwtController = require('./auth_jwt');
 var jwt = require('jsonwebtoken');
 var cors = require('cors');
 var User = require('./Users');
- 
+
 var app = express();
 app.use(cors());
 app.use(bodyParser.json());
@@ -54,7 +55,7 @@ router.post('/signup', function(req, res) {
                 if (err.code == 11000)
                     return res.json({ success: false, message: 'A user with that username already exists.'});
                 else
-                    return res.json(err);
+                    return res.json(err.message);
             }
 
             res.json({success: true, msg: 'Successfully created new user.'})
@@ -84,6 +85,9 @@ router.post('/signin', function (req, res) {
         })
     })
 });
+
+ 
+
 
 app.use('/', router);
 app.listen(process.env.PORT || 8080);
