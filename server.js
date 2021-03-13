@@ -102,7 +102,7 @@ router.route('/movies')
     })
     .post(function (req, res) {
         if (!req.body.title || !req.body.genre || !req.body.year || !req.body.actors && req.body.actors.length) {
-            res.json({success: false, msg: 'Supply title, genre, year, actors and the characters they play'});
+            res.json({success: false, message: 'Supply title, genre, year, actors and the characters they play'});
         }
         else {
             if(req.body.actors.length < 3) {
