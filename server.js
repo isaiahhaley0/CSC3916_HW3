@@ -133,7 +133,7 @@ router.route('/movies')
 
     .put(function(req, res) {
         if (!req.body.title){
-            res.json({success: false, message: 'Please submit title of the movie you wish to update.'});
+            res.json({success: false, message: 'Please submit title of target movie'});
         } else {
             var title = req.body.title;
             Movie.findOne({title:title},function(err,movie){
