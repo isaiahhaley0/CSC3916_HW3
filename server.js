@@ -88,28 +88,25 @@ router.post('/signin', function (req, res) {
 
 router.route('/movies')
 
-    //Retrieve movies
+
     .get(function (req, res) {
-        if (!req.body.title) {
-            res.json({success: false, message: 'Please submit title of the movie you wish to find.'});
-        } else {
-            var title_query = req.body.title;
-            console.log(req.body.title);
-            Movie.findOne({title: title_query}, function (err, movie) {
-                if (err) res.send(err);
-                else
-                res.json({success: true, message: movie});
-            });
-        }
+        var movie = new Movie();
+        Movie.find({}, function (err,) {
+            if (err) throw err;
+            else
+                console.log(movie);
+            res = res.status(200);
+            res.json({success: true, msg: 'got movies.'});
+        });
+
     })
-    //Save movies
     .post(function (req, res) {
         if (!req.body.title || !req.body.genre || !req.body.year || !req.body.actors && req.body.actors.length) {
-            res.json({success: false, msg: 'Please pass Movie Title, Year released, Genre, and Actors(Actor Name and Character Name)'});
+            res.json({success: false, msg: 'Supply title, genre, year, actors and the characters they play'});
         }
         else {
             if(req.body.actors.length < 3) {
-                res.json({ success: false, message: 'Please include at least three actors.'});
+                res.json({ success: false, message: 'three actors needed'});
             }
             else {
                 var movie = new Movie(req, res);
@@ -121,67 +118,38 @@ router.route('/movies')
                 movie.save(function(err) {
                     if (err) {
                         if (err.code == 11000)
-                            return res.json({ success: false, message: 'A movie with that title already exists.'});
+                            return res.json({ success: false, message: 'movie already exists'});
                         else
                             return res.send(err);
                     }
-                    res.json({ message: 'Movie successfully created.' });
+                    res.json({ message: 'success' });
                 });
             }
         }
     })
 
     .put(function(req, res) {
-        if (!req.body.title){
-            res.json({success: false, message: 'Please submit title of target movie'});
-        } else {
-            var title = req.body.title;
-            Movie.findOne({title:title},function(err,movie){
-                if(movie != null){
-                    if (err) res.send(err);
+        var movie = new Movie();
+        movie.title = req.body.title;
+        movie.year = req.body.year;
+        movie.genre = req.body.genre;
+        movie.actors= req.body.actors;
 
-                    if(req.body.year){
-                        movie.year = req.body.year;
-                    }
-
-                    if(req.body.genre){
-                        movie.genre = req.body.genre;
-                    }
-
-                    if(req.body.actor_1){
-                        movie.actors[0][0] = req.body.actor_1;
-                    }
-                    if(req.body.actor_2){
-                        movie.actors[1][0] = req.body.actor_2;
-                    }
-                    if(req.body.actor_3){
-                        movie.actors[2][0] = req.body.actor_3;
-                    }
-                    if(req.body.character_1){
-                        movie.actors[0][1] = req.body.character_1;
-                    }
-                    if(req.body.character_2){
-                        movie.actors[1][1] = req.body.character_2;
-                    }
-                    if(req.body.character_3){
-                        movie.actors[2][1] = req.body.character_3;
-                    }
-
-                    movie.save(function(err){
-                        if (err) res.send(err);
-                        res.json({success: true, message: 'Movie updated!'});
-                    });
-                }else{
-                    res.json({success: false, message: 'Failed to find movie!'});
+        if (Movie.find({title: movie.title}, function (err, m) {
+            movie.save(function (err, m) {
+                if (err) throw err;
+                else {
+                    res = res.status(200);
+                    res.json({success: true, message: 'updated'});
                 }
             });
-        }
+        }));
     })
 
-    //Delete movies
+
     .delete(function(req, res) {
         if (!req.body.title){
-            res.json({success: false, message: 'Please submit title of the movie you wish to delete.'});
+            res.json({success: false, message: 'Please input title of movie to delete'});
         } else {
 
             var title = req.body.title;
