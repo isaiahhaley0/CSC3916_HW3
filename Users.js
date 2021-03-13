@@ -8,7 +8,7 @@ mongoose.connect(process.env.DB, { useNewUrlParser: true });
 var db = mongoose.connection;
 try {
     mongoose.connect( process.env.DB, {useNewUrlParser: true, useUnifiedTopology: true}, () =>
-        console.log(db));
+        console.log("connected"));
 }catch (error) {
     console.log("could not connect1");
 }
